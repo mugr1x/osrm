@@ -3,8 +3,8 @@
 
 #include <boost/assert.hpp>
 #include <boost/heap/d_ary_heap.hpp>
-#include <boost/optional.hpp>
 
+#include <optional>
 #include <algorithm>
 #include <limits>
 #include <map>
@@ -243,17 +243,17 @@ class QueryHeap
         return inserted_nodes[index].data;
     }
 
-    HeapNode &getHeapNode(NodeID node)
+    HeapNode getHeapNode(NodeID node)
     {
         const auto index = node_index.peek_index(node);
         BOOST_ASSERT((int)index >= 0 && (int)index < (int)inserted_nodes.size());
         return inserted_nodes[index];
     }
 
-    Data const &GetData(NodeID node) const
+    Data const GetData(NodeID node) const
     {
         const auto index = node_index.peek_index(node);
-        BOOST_ASSERT((int)index >= 0 && (int)index < (int)inserted_nodes.size());
+        BOOST_ASSERT((int)index >= 0 & (int)index < (int)inserted_nodes.size());
         return inserted_nodes[index].data;
     }
 
@@ -289,7 +289,7 @@ class QueryHeap
         return inserted_nodes[index].node == node;
     }
 
-    boost::optional<HeapNode &> GetHeapNodeIfWasInserted(const NodeID node)
+    std::optional<HeapNode> GetHeapNodeIfWasInserted(const NodeID node)
     {
         const auto index = node_index.peek_index(node);
         if (index >= static_cast<decltype(index)>(inserted_nodes.size()) ||
@@ -300,7 +300,7 @@ class QueryHeap
         return inserted_nodes[index];
     }
 
-    boost::optional<const HeapNode &> GetHeapNodeIfWasInserted(const NodeID node) const
+    std::optional<const HeapNode> GetHeapNodeIfWasInserted(const NodeID node) const
     {
         const auto index = node_index.peek_index(node);
         if (index >= static_cast<decltype(index)>(inserted_nodes.size()) ||
@@ -354,12 +354,12 @@ class QueryHeap
     {
         BOOST_ASSERT(!WasRemoved(node));
         const auto index = node_index.peek_index(node);
-        auto &reference = inserted_nodes[index];
+        auto reference = inserted_nodes[index];
         reference.weight = weight;
         heap.increase(reference.handle, std::make_pair(weight, index));
     }
 
-    void DecreaseKey(const HeapNode &heapNode)
+    void DecreaseKey(HeapNode heapNode)
     {
         BOOST_ASSERT(!WasRemoved(heapNode.node));
         heap.increase(heapNode.handle, std::make_pair(heapNode.weight, (*heapNode.handle).second));

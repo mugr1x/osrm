@@ -1,9 +1,7 @@
 #ifndef EXTRACTION_HELPER_FUNCTIONS_HPP
 #define EXTRACTION_HELPER_FUNCTIONS_HPP
 
-#include <boost/phoenix.hpp>
-#include <boost/spirit/include/qi.hpp>
-
+#include <boost/spirit/home/x3.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
 #include <algorithm>
@@ -14,38 +12,36 @@
 
 #include "guidance/parsing_toolkit.hpp"
 
+namespace x3 = boost::spirit::x3;
+
 namespace osrm::extractor
 {
-
-namespace detail
+/*
+namespace parser
 {
+        using x3::_pass;
+        using x3::_val;
+        using x3::_attr;
+        using x3::char_;
+        using x3::eoi;
+        using x3::eps;
+        using x3::uint_;
 
-namespace qi = boost::spirit::qi;
+// OK trying to understand this now
 
-template <typename Iterator> struct iso_8601_grammar : qi::grammar<Iterator, unsigned()>
-{
-    iso_8601_grammar() : iso_8601_grammar::base_type(root)
-
-    {
-        using qi::_1;
-        using qi::_a;
-        using qi::_b;
-        using qi::_c;
-        using qi::_pass;
-        using qi::_val;
-        using qi::char_;
-        using qi::eoi;
-        using qi::eps;
-        using qi::uint_;
-
+		/// hours preasumeably in 01, etc 24 etc., includes checks < 24 etc. assigns _val  _1
         hh = uint2_p[_pass = bind([](unsigned x) { return x < 24; }, _1), _val = _1];
+        // minutes
         mm = uint2_p[_pass = bind([](unsigned x) { return x < 60; }, _1), _val = _1];
+        // seconds
         ss = uint2_p[_pass = bind([](unsigned x) { return x < 60; }, _1), _val = _1];
 
         osm_time = (uint_p[_a = _1] >> eoi)[_val = _a * 60] |
                    (uint_p[_a = _1] >> ':' >> uint_p[_b = _1] >> eoi)[_val = _a * 3600 + _b * 60] |
                    (uint_p[_a = _1] >> ':' >> uint_p[_b = _1] >> ':' >> uint_p[_c = _1] >>
                     eoi)[_val = _a * 3600 + _b * 60 + _c];
+
+
 
         alternative_time =
             ('T' >> hh[_a = _1] >> mm[_b = _1] >> ss[_c = _1])[_val = _a * 3600 + _b * 60 + _c];
@@ -70,43 +66,49 @@ template <typename Iterator> struct iso_8601_grammar : qi::grammar<Iterator, uns
         root = iso_period;
     }
 
-    qi::rule<Iterator, unsigned()> root;
-    qi::rule<Iterator, unsigned(), qi::locals<unsigned, unsigned>> iso_period;
-    qi::rule<Iterator, unsigned(), qi::locals<unsigned, unsigned, unsigned>> osm_time,
-        standard_time, alternative_time, extended_time;
-    qi::rule<Iterator, unsigned()> standard_date, standard_week;
-    qi::rule<Iterator, unsigned()> hh, mm, ss;
+    x3::rule<unsigned()> root;
+    x3::rule<unsigned()> iso_period;
+    x3::rule<unsigned()> osm_time, standard_time, alternative_time, extended_time;
+    x3::rule<unsigned()> standard_date, standard_week;
+    x3::rule<unsigned()> hh, mm, ss;
 
-    qi::uint_parser<unsigned, 10, 1, 2> uint_p;
-    qi::uint_parser<unsigned, 10, 2, 2> uint2_p;
-};
-} // namespace detail
-
+    x3::uint_parser<unsigned, 10, 1, 2> uint_p;
+    x3::uint_parser<unsigned, 10, 2, 2> uint2_p;
+} // namespace parser
+*/
 inline bool durationIsValid(const std::string &s)
-{
+{	
+	std::cout << s << '\n';
+	/*
     static detail::iso_8601_grammar<std::string::const_iterator> const iso_8601_grammar;
 
     std::string::const_iterator iter = s.begin();
     unsigned duration = 0;
     boost::spirit::qi::parse(iter, s.end(), iso_8601_grammar, duration);
 
-    return !s.empty() && iter == s.end();
+    return !s.empty() && iter == s.end();*/
+    
+    return true;
 }
 
 inline unsigned parseDuration(const std::string &s)
 {
+	std::cout << s << '\n';
+	/*
     static detail::iso_8601_grammar<std::string::const_iterator> const iso_8601_grammar;
 
     std::string::const_iterator iter = s.begin();
     unsigned duration = 0;
-    boost::spirit::qi::parse(iter, s.end(), iso_8601_grammar, duration);
+    boost::spirit::x3::parse(iter, s.end(), iso_8601_grammar, duration);
 
-    return !s.empty() && iter == s.end() ? duration : std::numeric_limits<unsigned>::max();
+	return !s.empty() && iter == s.end() ? duration : std::numeric_limits<unsigned>::max();
+	*/
+	return true;
 }
 
-inline std::string
-trimLaneString(std::string lane_string, std::int32_t count_left, std::int32_t count_right)
+inline std::string trimLaneString(std::string lane_string, std::int32_t count_left, std::int32_t count_right)
 {
+
     return guidance::trimLaneString(std::move(lane_string), count_left, count_right);
 }
 

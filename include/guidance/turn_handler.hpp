@@ -11,7 +11,7 @@
 #include "util/attributes.hpp"
 #include "util/node_based_graph.hpp"
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <cstddef>
 #include <utility>
@@ -72,7 +72,7 @@ class TurnHandler final : public IntersectionHandler
 
     bool hasObvious(const EdgeID &via_edge, const Fork &fork) const;
 
-    boost::optional<Fork> findForkCandidatesByGeometry(Intersection &intersection) const;
+    std::optional<Fork> findForkCandidatesByGeometry(Intersection &intersection) const;
 
     bool isCompatibleByRoadClass(const Intersection &intersection, const Fork fork) const;
 
@@ -96,7 +96,7 @@ class TurnHandler final : public IntersectionHandler
     handleDistinctConflict(const EdgeID via_edge, ConnectedRoad &left, ConnectedRoad &right) const;
 
     // Classification
-    boost::optional<Fork> findFork(const EdgeID via_edge, Intersection &intersection) const;
+    std::optional<Fork> findFork(const EdgeID via_edge, Intersection &intersection) const;
 
     OSRM_ATTR_WARN_UNUSED
     Intersection assignLeftTurns(const EdgeID via_edge,

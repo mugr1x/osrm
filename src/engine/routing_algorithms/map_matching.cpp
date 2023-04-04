@@ -69,7 +69,7 @@ SubMatchingList mapMatching(SearchEngineData<Algorithm> &engine_working_data,
                             const CandidateLists &candidates_list,
                             const std::vector<util::Coordinate> &trace_coordinates,
                             const std::vector<unsigned> &trace_timestamps,
-                            const std::vector<boost::optional<double>> &trace_gps_precision,
+                            const std::vector<std::optional<double>> &trace_gps_precision,
                             const bool allow_splitting)
 {
     map_matching::MatchingConfidence confidence;
@@ -440,7 +440,7 @@ mapMatching(SearchEngineData<ch::Algorithm> &engine_working_data,
             const CandidateLists &candidates_list,
             const std::vector<util::Coordinate> &trace_coordinates,
             const std::vector<unsigned> &trace_timestamps,
-            const std::vector<boost::optional<double>> &trace_gps_precision,
+            const std::vector<std::optional<double>> &trace_gps_precision,
             const bool allow_splitting);
 
 // MLD
@@ -450,7 +450,7 @@ mapMatching(SearchEngineData<mld::Algorithm> &engine_working_data,
             const CandidateLists &candidates_list,
             const std::vector<util::Coordinate> &trace_coordinates,
             const std::vector<unsigned> &trace_timestamps,
-            const std::vector<boost::optional<double>> &trace_gps_precision,
+            const std::vector<std::optional<double>> &trace_gps_precision,
             const bool allow_splitting);
 
 } // namespace osrm::engine::routing_algorithms

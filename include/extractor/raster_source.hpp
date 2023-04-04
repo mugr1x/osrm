@@ -10,8 +10,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/foreach.hpp>
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/qi_int.hpp>
+#include <boost/spirit/home/x3.hpp>
 
 #include <storage/io.hpp>
 

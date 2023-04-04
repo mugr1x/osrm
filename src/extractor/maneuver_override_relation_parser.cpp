@@ -21,7 +21,7 @@ ManeuverOverrideRelationParser::ManeuverOverrideRelationParser() {}
  * into an InputManeuverOverride object, if the relation is considered
  * valid (i.e. has the minimum tags we expect).
  */
-boost::optional<InputManeuverOverride>
+std::optional<InputManeuverOverride>
 ManeuverOverrideRelationParser::TryParse(const osmium::Relation &relation) const
 {
 
@@ -35,7 +35,7 @@ ManeuverOverrideRelationParser::TryParse(const osmium::Relation &relation) const
     if (osmium::tags::match_none_of(tag_list, filter))
     // if it's not a maneuver, continue;
     {
-        return boost::none;
+        return std::nullopt;
     }
 
     // we pretend every restriction is a conditional restriction. If we do not find any restriction,
@@ -130,7 +130,7 @@ ManeuverOverrideRelationParser::TryParse(const osmium::Relation &relation) const
     }
     else
     {
-        return boost::none;
+        return std::nullopt;
     }
     return maneuver_override;
 }

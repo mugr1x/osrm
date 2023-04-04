@@ -7,7 +7,7 @@
 #include "engine/hint.hpp"
 #include "engine/polyline_compressor.hpp"
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <boost/phoenix.hpp>
 #include <boost/spirit/include/qi.hpp>
 
@@ -88,14 +88,14 @@ struct BaseParametersGrammar : boost::spirit::qi::grammar<Iterator, Signature>
             }
             else
             {
-                base_parameters.hints.emplace_back(boost::none);
+                base_parameters.hints.emplace_back(std::nullopt);
             }
         };
 
         const auto add_bearing =
             [](engine::api::BaseParameters &base_parameters,
-               boost::optional<boost::fusion::vector2<short, short>> bearing_range) {
-                boost::optional<engine::Bearing> bearing;
+               std::optional<boost::fusion::vector2<short, short>> bearing_range) {
+                std::optional<engine::Bearing> bearing;
                 if (bearing_range)
                 {
                     bearing = engine::Bearing{boost::fusion::at_c<0>(*bearing_range),

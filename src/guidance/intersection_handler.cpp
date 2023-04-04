@@ -426,7 +426,7 @@ void IntersectionHandler::assignTrivialTurns(const EdgeID via_eid,
         }
 }
 
-boost::optional<IntersectionHandler::IntersectionViewAndNode>
+std::optional<IntersectionHandler::IntersectionViewAndNode>
 IntersectionHandler::getNextIntersection(const NodeID at, const EdgeID via) const
 {
     // We use the intersection generator to jump over traffic signals, barriers. The intersection
@@ -449,7 +449,7 @@ IntersectionHandler::getNextIntersection(const NodeID at, const EdgeID via) cons
     if (intersection_parameters.node == SPECIAL_NODEID ||
         intersection_parameters.edge == SPECIAL_EDGEID)
     {
-        return boost::none;
+        return std::nullopt;
     }
 
     auto intersection = extractor::intersection::getConnectedRoads<false>(node_based_graph,
@@ -464,10 +464,10 @@ IntersectionHandler::getNextIntersection(const NodeID at, const EdgeID via) cons
 
     if (intersection.size() <= 2 || intersection.isTrafficSignalOrBarrier())
     {
-        return boost::none;
+        return std::nullopt;
     }
 
-    return boost::make_optional(
+    return std::make_optional(
         IntersectionViewAndNode{std::move(intersection), intersection_node});
 }
 

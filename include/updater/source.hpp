@@ -3,7 +3,7 @@
 
 #include "util/typedefs.hpp"
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <vector>
 
@@ -12,9 +12,9 @@ namespace osrm::updater
 
 template <typename Key, typename Value> struct LookupTable
 {
-    boost::optional<Value> operator()(const Key &key) const
+    std::optional<Value> operator()(const Key &key) const
     {
-        using Result = boost::optional<Value>;
+        using Result = std::optional<Value>;
         const auto it = std::lower_bound(
             lookup.begin(), lookup.end(), key, [](const auto &lhs, const auto &rhs) {
                 return rhs < lhs.first;
@@ -49,7 +49,7 @@ struct SpeedSource final
 {
     SpeedSource() : speed(0.), rate() {}
     double speed;
-    boost::optional<double> rate;
+    std::optional<double> rate;
     std::uint8_t source;
 };
 

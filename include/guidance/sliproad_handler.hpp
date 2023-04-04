@@ -11,7 +11,7 @@
 
 #include <vector>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace osrm::guidance
 {
@@ -43,7 +43,7 @@ class SliproadHandler final : public IntersectionHandler
                             Intersection intersection) const override final;
 
   private:
-    boost::optional<std::size_t> getObviousIndexWithSliproads(const EdgeID from,
+    std::optional<std::size_t> getObviousIndexWithSliproads(const EdgeID from,
                                                               const Intersection &intersection,
                                                               const NodeID at) const;
 

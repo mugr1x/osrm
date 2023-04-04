@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/filesystem/path.hpp>
 
 #include <string>
+#include <optional>
 
 namespace osrm::engine
 {
@@ -83,7 +84,7 @@ struct EngineConfig final
     int max_locations_map_matching = -1;
     double max_radius_map_matching = -1.0;
     int max_results_nearest = -1;
-    boost::optional<double> default_radius;
+    std::optional<double> default_radius;
     int max_alternatives = 3; // set an arbitrary upper bound; can be adjusted by user
     bool use_shared_memory = true;
     boost::filesystem::path memory_file;

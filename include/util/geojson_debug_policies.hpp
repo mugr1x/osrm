@@ -9,7 +9,7 @@
 #include "util/node_based_graph.hpp"
 #include "util/typedefs.hpp"
 
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace osrm::util
 {
@@ -20,7 +20,7 @@ struct NodeIdVectorToLineString
 
     // converts a vector of node ids into a linestring geojson feature
     util::json::Object operator()(const std::vector<NodeID> &node_ids,
-                                  const boost::optional<json::Object> &properties = {}) const;
+                                  const std::optional<json::Object> &properties = {}) const;
 
     const std::vector<util::Coordinate> &node_coordinates;
 };
@@ -29,7 +29,7 @@ struct CoordinateVectorToLineString
 {
     // converts a vector of node ids into a linestring geojson feature
     util::json::Object operator()(const std::vector<util::Coordinate> &coordinates,
-                                  const boost::optional<json::Object> &properties = {}) const;
+                                  const std::optional<json::Object> &properties = {}) const;
 };
 
 struct NodeIdVectorToMultiPoint
@@ -38,7 +38,7 @@ struct NodeIdVectorToMultiPoint
 
     // converts a vector of node ids into a linestring geojson feature
     util::json::Object operator()(const std::vector<NodeID> &node_ids,
-                                  const boost::optional<json::Object> &properties = {}) const;
+                                  const std::optional<json::Object> &properties = {}) const;
 
     const std::vector<util::Coordinate> &node_coordinates;
 };
@@ -47,7 +47,7 @@ struct CoordinateVectorToMultiPoint
 {
     // converts a vector of node ids into a linestring geojson feature
     util::json::Object operator()(const std::vector<util::Coordinate> &coordinates,
-                                  const boost::optional<json::Object> &properties = {}) const;
+                                  const std::optional<json::Object> &properties = {}) const;
 };
 
 } // namespace osrm::util

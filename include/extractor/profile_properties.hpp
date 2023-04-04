@@ -7,7 +7,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <algorithm>
 #include <array>
@@ -80,7 +80,7 @@ struct ProfileProperties
     }
 
     // Check if this classes are excludable
-    boost::optional<std::size_t> ClassesAreExcludable(ClassData classes) const
+    std::optional<std::size_t> ClassesAreExcludable(ClassData classes) const
     {
         auto iter = std::find(excludable_classes.begin(), excludable_classes.end(), classes);
         if (iter != excludable_classes.end())
