@@ -1,9 +1,7 @@
 #ifndef EXTRACTION_HELPER_FUNCTIONS_HPP
 #define EXTRACTION_HELPER_FUNCTIONS_HPP
 
-#include <boost/phoenix.hpp>
-#include <boost/spirit/include/qi.hpp>
-
+#include <boost/spirit/home/x3.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
 #include <algorithm>
@@ -11,36 +9,29 @@
 #include <iterator>
 #include <limits>
 #include <string>
+#include <iostream>
 
 #include "guidance/parsing_toolkit.hpp"
+
+namespace x3 = boost::spirit::x3;
+namespace ascii = boost::spirit::x3::ascii;
 
 namespace osrm::extractor
 {
 
-namespace detail
+namespace parser
 {
+        using x3::eps;
+        using x3::int_;
+        using x3::lit;
+        using x3::lexeme;
+        using ascii::char_;
 
-namespace qi = boost::spirit::qi;
-
-template <typename Iterator> struct iso_8601_grammar : qi::grammar<Iterator, unsigned()>
-{
-    iso_8601_grammar() : iso_8601_grammar::base_type(root)
-
-    {
-        using qi::_1;
-        using qi::_a;
-        using qi::_b;
-        using qi::_c;
-        using qi::_pass;
-        using qi::_val;
-        using qi::char_;
-        using qi::eoi;
-        using qi::eps;
-        using qi::uint_;
-
-        hh = uint2_p[_pass = bind([](unsigned x) { return x < 24; }, _1), _val = _1];
-        mm = uint2_p[_pass = bind([](unsigned x) { return x < 60; }, _1), _val = _1];
-        ss = uint2_p[_pass = bind([](unsigned x) { return x < 60; }, _1), _val = _1];
+		auto const hh = x3::int_; // < 24
+		auto const mm = x3::int_; // < 60
+		auto const ss = x3::int_; // < 60
+/*
+		auto const osm_time = 
 
         osm_time = (uint_p[_a = _1] >> eoi)[_val = _a * 60] |
                    (uint_p[_a = _1] >> ':' >> uint_p[_b = _1] >> eoi)[_val = _a * 3600 + _b * 60] |
@@ -60,48 +51,69 @@ template <typename Iterator> struct iso_8601_grammar : qi::grammar<Iterator, uns
         standard_date = (uint_ >> char_("Dd"))[_val = _1 * 86400];
 
         standard_week = (uint_ >> char_("Ww"))[_val = _1 * 604800];
-
+		
         iso_period =
             osm_time[_val = _1] | ('P' >> standard_week >> eoi)[_val = _1] |
             ('P' >> (alternative_time[_a = 0, _b = _1] | extended_time[_a = 0, _b = _1] |
                      (eps[_a = 0, _b = 0] >> -standard_date[_a = _1] >> -standard_time[_b = _1])) >>
              eoi)[_val = _a + _b];
 
-        root = iso_period;
-    }
+        root = iso_period;*/
 
-    qi::rule<Iterator, unsigned()> root;
-    qi::rule<Iterator, unsigned(), qi::locals<unsigned, unsigned>> iso_period;
-    qi::rule<Iterator, unsigned(), qi::locals<unsigned, unsigned, unsigned>> osm_time,
-        standard_time, alternative_time, extended_time;
-    qi::rule<Iterator, unsigned()> standard_date, standard_week;
-    qi::rule<Iterator, unsigned()> hh, mm, ss;
+    //x3::uint_parser<unsigned, 10, 1, 2> uint_p;
+    //x3::uint_parser<unsigned, 10, 2, 2> uint2_p;
 
-    qi::uint_parser<unsigned, 10, 1, 2> uint_p;
-    qi::uint_parser<unsigned, 10, 2, 2> uint2_p;
-};
-} // namespace detail
+    auto set_zero = [](auto& ctx){ _val(ctx) = 0; };
+/*
+    x3::rule<unsigned> standard_time const standard_time = "standard_time";
+    x3::rule<unsigned> standard_week const standard_week = "standard_week";
+
+	x3::rule<class iso_period, unsigned, unsigned> const iso_period = "iso_period";
+    x3::rule<class osm_time, unsigned, unsigned, unsigned> const osm_time = "osm_time";
+    x3::rule<class alternative_time, unsigned, unsigned, unsigned> const alternative_time = "alternative_time";
+    x3:.rule<class extended_time, unsigned, unsigned, unsigned> const extended_time = "extended_time";
+*/
+
+	x3::rule<class iso_8601, unsigned> const iso_8601 = "iso_8601";
+	
+    auto const iso_8601_def = 
+    	eps						[set_zero]
+    ;
+			//-(+lit(''))
+			//>> -		[standard_week]
+			//>> -		[standard_time]
+			//>> -		[osm_time]
+			//>> - 		[alternative_time]
+			//>> -		[extended_time]
+			//>> -iso_period	[iso_period]
+    	//)
+    	
+	BOOST_SPIRIT_DEFINE(iso_8601);
+	
+} // namespace parser
 
 inline bool durationIsValid(const std::string &s)
 {
-    static detail::iso_8601_grammar<std::string::const_iterator> const iso_8601_grammar;
+	std::cout << "GREPME " << s << '\n';
+    using parser::iso_8601;
 
     std::string::const_iterator iter = s.begin();
     unsigned duration = 0;
-    boost::spirit::qi::parse(iter, s.end(), iso_8601_grammar, duration);
-
+    boost::spirit::x3::parse(iter, s.end(), iso_8601, duration);
+	return true;
     return !s.empty() && iter == s.end();
 }
 
 inline unsigned parseDuration(const std::string &s)
 {
-    static detail::iso_8601_grammar<std::string::const_iterator> const iso_8601_grammar;
+	std::cout << "GREPME " << s << '\n';
+	using parser::iso_8601;
 
     std::string::const_iterator iter = s.begin();
     unsigned duration = 0;
-    boost::spirit::qi::parse(iter, s.end(), iso_8601_grammar, duration);
-
-    return !s.empty() && iter == s.end() ? duration : std::numeric_limits<unsigned>::max();
+    boost::spirit::x3::parse(iter, s.end(), iso_8601, duration);
+	return true;
+    return !s.empty() && iter == s.end() ? 0 : std::numeric_limits<unsigned>::max();
 }
 
 inline std::string
