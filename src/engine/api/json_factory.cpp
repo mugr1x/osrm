@@ -11,8 +11,8 @@
 #include "util/typedefs.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/optional.hpp>
 
+#include <optional>
 #include <algorithm>
 #include <iterator>
 #include <string>
@@ -204,7 +204,7 @@ util::json::Object makeRouteStep(guidance::RouteStep step, util::json::Value geo
 
 util::json::Object makeRoute(const guidance::Route &route,
                              util::json::Array legs,
-                             boost::optional<util::json::Value> geometry,
+                             std::optional<util::json::Value> geometry,
                              const char *weight_name)
 {
     util::json::Object json_route;
