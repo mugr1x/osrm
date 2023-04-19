@@ -11,7 +11,7 @@
 #include "util/typedefs.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 #include <cstdint>
 #include <utility>
 
@@ -42,7 +42,7 @@ class NodeBasedGraphWalker
      * selector not provinding any further edge to traverse)
      */
     template <class accumulator_type, class selector_type>
-    boost::optional<std::pair<NodeID, EdgeID>> TraverseRoad(NodeID starting_at_node_id,
+    std::optional<std::pair<NodeID, EdgeID>> TraverseRoad(NodeID starting_at_node_id,
                                                             EdgeID following_edge_id,
                                                             accumulator_type &accumulator,
                                                             const selector_type &selector) const;
@@ -111,7 +111,7 @@ struct SelectRoadByNameOnlyChoiceAndStraightness
      * traversal. If no such edge is found, return {} is allowed. Usually you want to choose some
      * form of obious turn to follow.
      */
-    boost::optional<EdgeID> operator()(const NodeID nid,
+    std::optional<EdgeID> operator()(const NodeID nid,
                                        const EdgeID via_edge_id,
                                        const IntersectionView &intersection,
                                        const util::NodeBasedDynamicGraph &node_based_graph,
@@ -138,7 +138,7 @@ struct SelectStraightmostRoadByNameAndOnlyChoice
      * traversal. If no such edge is found, return {} is allowed. Usually you want to choose some
      * form of obious turn to follow.
      */
-    boost::optional<EdgeID> operator()(const NodeID nid,
+    std::optional<EdgeID> operator()(const NodeID nid,
                                        const EdgeID via_edge_id,
                                        const IntersectionView &intersection,
                                        const util::NodeBasedDynamicGraph &node_based_graph,
@@ -187,7 +187,7 @@ struct IntersectionFinderAccumulator
 };
 
 template <class accumulator_type, class selector_type>
-boost::optional<std::pair<NodeID, EdgeID>>
+std::optional<std::pair<NodeID, EdgeID>>
 NodeBasedGraphWalker::TraverseRoad(NodeID current_node_id,
                                    EdgeID current_edge_id,
                                    accumulator_type &accumulator,
@@ -254,7 +254,7 @@ NodeBasedGraphWalker::TraverseRoad(NodeID current_node_id,
 
 struct SkipTrafficSignalBarrierRoadSelector
 {
-    boost::optional<EdgeID> operator()(const NodeID,
+    std::optional<EdgeID> operator()(const NodeID,
                                        const EdgeID,
                                        const IntersectionView &intersection,
                                        const util::NodeBasedDynamicGraph &,
@@ -262,11 +262,11 @@ struct SkipTrafficSignalBarrierRoadSelector
     {
         if (intersection.isTrafficSignalOrBarrier())
         {
-            return boost::make_optional(intersection[1].eid);
+            return std::make_optional(intersection[1].eid);
         }
         else
         {
-            return boost::none;
+            return std::nullopt;
         }
     }
 };
